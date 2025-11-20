@@ -1,5 +1,8 @@
+import 'package:bussines_booking/core/secrets/secret_constatnts.dart';
+
 class EndPoints {
-  static final String baseUrl = " ";
+  static final String baseUrl =
+      SecretConstants.apiBaseUrl ?? 'https://api.example.com';
 
   // Auth endpoints
   static final String authData = '$baseUrl/auth';
