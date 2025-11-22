@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class LoginButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final bool isLoading;
-
   const LoginButton({
-    super.key,
     required this.onPressed,
+    super.key,
     this.isLoading = false,
   });
+  final VoidCallback onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {

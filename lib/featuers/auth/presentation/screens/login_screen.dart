@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:bussines_booking/core/routers/router.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/business_portal_logo.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/email_input_field.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/gears_illustration.dart';
@@ -6,6 +6,8 @@ import 'package:bussines_booking/featuers/auth/presentation/widgets/login_button
 import 'package:bussines_booking/featuers/auth/presentation/widgets/password_input_field.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/signup_link.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/welcome_header.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,24 +30,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLogin() {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+    context.go(AppRouters.sliderRoute);
+    // if (_formKey.currentState!.validate()) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
 
-      // TODO: Implement actual login logic
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          // Navigate to home screen or show error
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login functionality coming soon!')),
-          );
-        }
-      });
-    }
+    //   // TODO: Implement actual login logic
+    //   Future.delayed(const Duration(seconds: 2), () {
+    //     if (mounted) {
+    //       setState(() {
+    //         _isLoading = false;
+    //       });
+    //       // Navigate to home screen or show error
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(content: Text('Login functionality coming soon!')),
+    //       );
+    //     }
+    //   });
+    // }
   }
 
   void _handleSignUp() {
