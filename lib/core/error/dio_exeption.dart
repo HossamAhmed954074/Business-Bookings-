@@ -13,18 +13,6 @@ class DioAppException implements Exception {
     this.dioException,
   });
 
-  /// Human-readable message describing the problem.
-  final String message;
-
-  /// HTTP status code (if present on the response).
-  final int? statusCode;
-
-  /// Raw payload returned by the backend (if any).
-  final Object? data;
-
-  /// The originating Dio exception for debugging purposes.
-  final DioException? dioException;
-
   /// Builds a [DioAppException] from a Dio-layer exception, mapping it to a
   /// consistent error message regardless of the original transport error.
   factory DioAppException.fromDioException(DioException dioException) {
@@ -81,9 +69,20 @@ class DioAppException implements Exception {
       message: message,
       statusCode: response.statusCode,
       data: response.data,
-      dioException: null,
     );
   }
+
+  /// Human-readable message describing the problem.
+  final String message;
+
+  /// HTTP status code (if present on the response).
+  final int? statusCode;
+
+  /// Raw payload returned by the backend (if any).
+  final Object? data;
+
+  /// The originating Dio exception for debugging purposes.
+  final DioException? dioException;
 
   /// Executes [callback] and converts any [DioException] into a
   /// [DioAppException], returning either the result or the mapped
@@ -121,12 +120,14 @@ class DioAppException implements Exception {
       409 =>
         payloadMessage ?? 'A conflict occurred while processing your request.',
       422 => payloadMessage ?? 'The submitted data is invalid.',
-      500 || 502 || 503 || 504 => payloadMessage ??
-          'The server is currently unavailable. Please try again later.',
-      _ => payloadMessage ??
-          (statusCode != null
-              ? 'Received an unexpected status code: $statusCode.'
-              : 'Unexpected server response.'),
+      500 || 502 || 503 || 504 =>
+        payloadMessage ??
+            'The server is currently unavailable. Please try again later.',
+      _ =>
+        payloadMessage ??
+            (statusCode != null
+                ? 'Received an unexpected status code: $statusCode.'
+                : 'Unexpected server response.'),
     };
   }
 
@@ -151,7 +152,7 @@ class DioAppException implements Exception {
         'error',
         'detail',
         'title',
-        'description'
+        'description',
       ]) {
         final value = data[key];
         if (value is String) {

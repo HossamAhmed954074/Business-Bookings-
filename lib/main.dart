@@ -5,9 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await dotenv.load(fileName: ".env");
+    await dotenv.load();
   } catch (e) {
-    debugPrint("Warning: .env file not found - $e");
+    debugPrint('Warning: .env file not found - $e');
   }
   runApp(const MyApp());
 }

@@ -5,96 +5,62 @@ import 'package:bussines_booking/core/services/api/end_points.dart';
 import 'package:dio/dio.dart';
 
 class DioConsumer extends ApiConsumer {
-  final Dio dio;
-
   DioConsumer({required this.dio}) {
     dio.options = BaseOptions(
       baseUrl: EndPoints.baseUrl,
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
-      responseType: ResponseType.json,
       validateStatus: (status) =>
           status != null && status >= 200 && status < 300,
     );
     dio.interceptors.add(ApiInterceptors());
-    dio.interceptors.add(
-      LogInterceptor(
-        request: true,
-        error: true,
-        responseBody: true,
-        requestBody: true,
-        requestHeader: true,
-        responseHeader: true,
-      ),
-    );
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   }
 
+  final Dio dio;
+
   @override
-  Future delete(
+  Future<dynamic> delete(
     String url, {
     Map<String, dynamic>? data,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
     bool isFormData = false,
-  }) {
+  }) async {
     try {
-      return dio
-          .delete(
-            url,
-            data: isFormData ? FormData.fromMap({...?data}) : data,
-            queryParameters: queryParameters,
-            options: Options(headers: headers),
-          )
-          .then((response) => response);
+      final response = await dio.delete<dynamic>(
+        url,
+        data: isFormData ? FormData.fromMap({...?data}) : data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+      return response;
     } on DioException catch (e) {
       throw DioAppException.fromDioException(e);
     }
   }
 
   @override
-  Future get(
+  Future<dynamic> get(
     String url, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
-  }) {
+  }) async {
     try {
-      return dio
-          .get(
-            url,
-            queryParameters: queryParameters,
-            options: Options(headers: headers),
-          )
-          .then((response) => response);
+      final response = await dio.get<dynamic>(
+        url,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+      return response;
     } on DioException catch (e) {
       throw DioAppException.fromDioException(e);
     }
   }
 
   @override
-  Future patch(
-    String url, {
-    Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? headers,
-    bool isFormData = false,
-  }) {
-    try {
-      return dio
-          .patch(
-            url,
-            data: isFormData ? FormData.fromMap({...?data}) : data,
-            queryParameters: queryParameters,
-            options: Options(headers: headers),
-          )
-          .then((response) => response);
-    } on DioException catch (e) {
-      throw DioAppException.fromDioException(e);
-    }
-  }
-
-  @override
-  Future post(
+  Future<dynamic> patch(
     String url, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? data,
@@ -102,7 +68,28 @@ class DioConsumer extends ApiConsumer {
     bool isFormData = false,
   }) async {
     try {
-      var response = await dio.post(
+      final response = await dio.patch<dynamic>(
+        url,
+        data: isFormData ? FormData.fromMap({...?data}) : data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+      return response;
+    } on DioException catch (e) {
+      throw DioAppException.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<dynamic> post(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
+    bool isFormData = false,
+  }) async {
+    try {
+      final response = await dio.post<dynamic>(
         url,
         data: isFormData ? FormData.fromMap({...?data}) : data,
         queryParameters: queryParameters,

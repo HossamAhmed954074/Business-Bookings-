@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 
-
 class ApiInterceptors extends Interceptor {
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // await TokenHandeller.refreshAccessToken();
     super.onRequest(options, handler);
   }

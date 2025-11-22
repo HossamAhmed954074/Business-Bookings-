@@ -50,7 +50,7 @@ abstract class AppRouters {
   );
 
   // Example method to clear authentication cache
-  static void clearAuthCache() async {
+  static Future<void> clearAuthCache() async {
     await AuthStorageService.clearToken();
   }
 }
