@@ -1,4 +1,6 @@
 import 'package:bussines_booking/core/routers/router.dart';
+import 'package:bussines_booking/featuers/auth/presentation/cubit/auth_cubit.dart';
+import 'package:bussines_booking/featuers/auth/presentation/cubit/auth_state.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/business_portal_logo.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/email_input_field.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/gears_illustration.dart';
@@ -7,6 +9,7 @@ import 'package:bussines_booking/featuers/auth/presentation/widgets/password_inp
 import 'package:bussines_booking/featuers/auth/presentation/widgets/signup_link.dart';
 import 'package:bussines_booking/featuers/auth/presentation/widgets/welcome_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -30,29 +33,19 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLogin() {
-    context.go(AppRouters.sliderRoute);
-    // if (_formKey.currentState!.validate()) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    //   // TODO: Implement actual login logic
-    //   Future.delayed(const Duration(seconds: 2), () {
-    //     if (mounted) {
-    //       setState(() {
-    //         _isLoading = false;
-    //       });
-    //       // Navigate to home screen or show error
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text('Login functionality coming soon!')),
-    //       );
-    //     }
-    //   });
-    // }
+      context.read<AuthCubit>().login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    }
   }
 
   void _handleSignUp() {
-    // TODO: Navigate to sign up screen
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Sign up functionality coming soon!')),
     );
@@ -67,28 +60,37 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 0,
         title: const Text('Login', style: TextStyle(color: Colors.black87)),
       ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Responsive layout: switch between column and row based on width
-            final isWideScreen = constraints.maxWidth > 800;
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthAuthenticated) {
+            context.go(AppRouters.sliderRoute);
+          }
+          if (state is AuthError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isWideScreen = constraints.maxWidth > 800;
 
-            if (isWideScreen) {
-              return _buildWideLayout();
-            } else {
-              return _buildNarrowLayout();
-            }
-          },
+              if (isWideScreen) {
+                return _buildWideLayout();
+              } else {
+                return _buildNarrowLayout();
+              }
+            },
+          ),
         ),
       ),
     );
   }
 
-  // Layout for desktop/wide screens
   Widget _buildWideLayout() {
     return Row(
       children: [
-        // Left side - Form
         Expanded(
           child: Center(
             child: SingleChildScrollView(

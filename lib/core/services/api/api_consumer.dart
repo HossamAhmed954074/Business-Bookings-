@@ -29,4 +29,12 @@ abstract class ApiConsumer {
     Map<String, dynamic>? headers,
     bool isFormData = false,
   });
+
+  Future<dynamic> put(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
+    bool isFormData = false,
+  });
 }

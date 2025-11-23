@@ -11,7 +11,7 @@ class BookingTableRow extends StatelessWidget {
     required this.onCancel,
     super.key,
   });
-  final Booking booking;
+  final BookingEntity booking;
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
 
@@ -27,20 +27,20 @@ class BookingTableRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              booking.customerName,
+              booking.userId,
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
             flex: 2,
             child: Text(
-              booking.className,
+              booking.sessionId,
               style: const TextStyle(fontSize: 14),
             ),
           ),
           Expanded(
             flex: 2,
-            child: Text(booking.time, style: const TextStyle(fontSize: 14)),
+            child: Text(booking.notes!, style: const TextStyle(fontSize: 14)),
           ),
           Expanded(
             flex: 2,

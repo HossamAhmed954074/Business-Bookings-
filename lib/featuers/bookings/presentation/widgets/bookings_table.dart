@@ -11,9 +11,9 @@ class BookingsTable extends StatelessWidget {
     required this.onCancel,
     super.key,
   });
-  final List<Booking> bookings;
-  final void Function(Booking) onConfirm;
-  final void Function(Booking) onCancel;
+  final List<BookingEntity> bookings;
+  final void Function(BookingEntity) onConfirm;
+  final void Function(BookingEntity) onCancel;
 
   @override
   Widget build(BuildContext context) {

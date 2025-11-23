@@ -15,51 +15,19 @@ class BookingsScreen extends StatefulWidget {
 class _BookingsScreenState extends State<BookingsScreen> {
   int _selectedTabIndex = 0;
 
-  // Sample data - replace with real data later
-  final List<Booking> _sampleBookings = const [
-    Booking(
-      customerName: 'Alice Johnson',
-      className: 'Morning Yoga',
-      time: '08:00 AM',
-      status: BookingStatus.confirmed,
-    ),
-    Booking(
-      customerName: 'Bob Williams',
-      className: 'Spin Class',
-      time: '09:30 AM',
-      status: BookingStatus.pending,
-    ),
-    Booking(
-      customerName: 'Charlie Brown',
-      className: 'Pilates Basics',
-      time: '11:00 AM',
-      status: BookingStatus.confirmed,
-    ),
-    Booking(
-      customerName: 'Diana Miller',
-      className: 'HIIT Training',
-      time: '01:00 PM',
-      status: BookingStatus.cancelled,
-    ),
-    Booking(
-      customerName: 'Eve Davis',
-      className: 'Meditation',
-      time: '03:00 PM',
-      status: BookingStatus.confirmed,
-    ),
-  ];
+  List<BookingEntity>? _bookings;
 
-  void _handleConfirm(Booking booking) {
+  void _handleConfirm(BookingEntity booking) {
     // TODO: Implement confirm logic
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Confirmed booking for ${booking.customerName}')),
+      SnackBar(content: Text('Confirmed booking for ${booking.sessionName}')),
     );
   }
 
-  void _handleCancel(Booking booking) {
+  void _handleCancel(BookingEntity booking) {
     // TODO: Implement cancel logic
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Cancelled booking for ${booking.customerName}')),
+      SnackBar(content: Text('Cancelled booking for ${booking.sessionName}')),
     );
   }
 
@@ -101,7 +69,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
 
             child: SingleChildScrollView(
               child: BookingsTable(
-                bookings: _sampleBookings,
+                bookings: _bookings!,
                 onConfirm: _handleConfirm,
                 onCancel: _handleCancel,
               ),

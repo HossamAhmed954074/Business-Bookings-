@@ -1,3 +1,4 @@
+import 'package:bussines_booking/core/services/auth_storage_services.dart';
 import 'package:dio/dio.dart';
 
 class ApiInterceptors extends Interceptor {
@@ -6,7 +7,13 @@ class ApiInterceptors extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // await TokenHandeller.refreshAccessToken();
+    // Add bearer token to all requests if available
+    final token = await AuthStorageService.getToken();
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
+      options.headers['x-auth-token'] = token;
+    }
+
     super.onRequest(options, handler);
   }
 
@@ -14,12 +21,13 @@ class ApiInterceptors extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (err.type == DioExceptionType.badResponse) {
       if (err.response?.statusCode == 401) {
-        // TokenHandeller.clearTokens();
-        // AppRouters.clearAuthCache();
+        // Token expired or invalid, clear it
+        AuthStorageService.clearToken();
+        // TODO: Navigate to login screen
       }
       // Handle other status codes
       if (err.response?.statusCode == 403) {
-        // Handle forbidden error
+        // Handle forbidden error - insufficient permissions
       } else if (err.response?.statusCode == 404) {
         // Handle not found error
       } else if (err.response?.statusCode == 500) {
