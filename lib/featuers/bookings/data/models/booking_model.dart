@@ -4,86 +4,70 @@ import 'package:bussines_booking/featuers/bookings/domain/entities/booking.dart'
 class BookingModel extends BookingEntity {
   const BookingModel({
     required super.id,
-    required super.userId,
-    required super.sessionId,
+    required super.user,
+    required super.businessId,
+    required super.session,
     required super.status,
-    required super.bookedAt,
+    required super.credits,
+    required super.bookingDate,
+    required super.createdAt,
+    required super.updatedAt,
     super.notes,
     super.confirmedAt,
-    super.sessionName,
-    super.sessionInstructor,
-    super.sessionDate,
-    super.sessionTime,
   });
 
   /// Create BookingModel from JSON
   factory BookingModel.fromJson(Map<String, dynamic> json) {
-    // Extract session data if populated
-    final session = json['session'] as Map<String, dynamic>?;
+    // Parse nested userId object
+    final userJson = json['userId'] as Map<String, dynamic>;
+    final user = BookingUser(
+      id: userJson['_id'] as String,
+      name: userJson['name'] as String,
+      email: userJson['email'] as String,
+      phone: userJson['phone'] as String?,
+    );
+
+    // Parse nested sessionId object
+    final sessionJson = json['sessionId'] as Map<String, dynamic>;
+    final session = BookingSession(
+      id: sessionJson['_id'] as String,
+      name: sessionJson['name'] as String,
+      date: DateTime.parse(sessionJson['date'] as String),
+      startTime: sessionJson['startTime'] as String,
+      endTime: sessionJson['endTime'] as String,
+    );
 
     return BookingModel(
-      id: json['_id'] as String? ?? json['id'] as String,
-      userId: json['userId'] as String? ?? json['user'] as String? ?? '',
-      sessionId:
-          json['sessionId'] as String? ??
-          json['session']?['_id'] as String? ??
-          '',
-      status: BookingStatus.fromString(json['status'] as String? ?? 'pending'),
+      id: json['_id'] as String,
+      user: user,
+      businessId: json['businessId'] as String,
+      session: session,
+      status: BookingStatus.fromString(json['status'] as String),
+      credits: json['credits'] as int,
+      bookingDate: DateTime.parse(json['bookingDate'] as String),
       notes: json['notes'] as String?,
-      bookedAt: json['bookedAt'] != null
-          ? DateTime.parse(json['bookedAt'] as String)
-          : DateTime.now(),
       confirmedAt: json['confirmedAt'] != null
           ? DateTime.parse(json['confirmedAt'] as String)
           : null,
-      sessionName: session?['name'] as String?,
-      sessionInstructor: session?['instructorName'] as String?,
-      sessionDate: session?['date'] != null
-          ? DateTime.parse(session!['date'] as String)
-          : null,
-      sessionTime: session?['startTime'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 
-  /// Convert BookingModel to JSON
+  /// Convert BookingModel to JSON (for sending to API)
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'userId': userId,
-      'sessionId': sessionId,
+      'userId': user.id,
+      'businessId': businessId,
+      'sessionId': session.id,
       'status': status.value,
+      'credits': credits,
+      'bookingDate': bookingDate.toIso8601String(),
       'notes': notes,
-      'bookedAt': bookedAt.toIso8601String(),
       'confirmedAt': confirmedAt?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
-  }
-
-  /// Copy with method
-  BookingModel copyWith({
-    String? id,
-    String? userId,
-    String? sessionId,
-    BookingStatus? status,
-    String? notes,
-    DateTime? bookedAt,
-    DateTime? confirmedAt,
-    String? sessionName,
-    String? sessionInstructor,
-    DateTime? sessionDate,
-    String? sessionTime,
-  }) {
-    return BookingModel(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      sessionId: sessionId ?? this.sessionId,
-      status: status ?? this.status,
-      notes: notes ?? this.notes,
-      bookedAt: bookedAt ?? this.bookedAt,
-      confirmedAt: confirmedAt ?? this.confirmedAt,
-      sessionName: sessionName ?? this.sessionName,
-      sessionInstructor: sessionInstructor ?? this.sessionInstructor,
-      sessionDate: sessionDate ?? this.sessionDate,
-      sessionTime: sessionTime ?? this.sessionTime,
-    );
   }
 }

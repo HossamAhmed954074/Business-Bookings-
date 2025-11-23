@@ -27,20 +27,23 @@ class BookingTableRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              booking.userId,
+              booking.user.name,
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
             flex: 2,
             child: Text(
-              booking.sessionId,
+              booking.session.name,
               style: const TextStyle(fontSize: 14),
             ),
           ),
           Expanded(
             flex: 2,
-            child: Text(booking.notes!, style: const TextStyle(fontSize: 14)),
+            child: Text(
+              '${booking.session.date.day}/${booking.session.date.month}/${booking.session.date.year} ${booking.session.startTime}',
+              style: const TextStyle(fontSize: 14),
+            ),
           ),
           Expanded(
             flex: 2,
@@ -53,13 +56,20 @@ class BookingTableRow extends StatelessWidget {
             flex: 2,
             child: Row(
               children: [
-                BookingActionButton(
-                  label: 'Confirm',
-                  onPressed: onConfirm,
-                  isPrimary: true,
+                Flexible(
+                  child: BookingActionButton(
+                    label: 'Confirm',
+                    onPressed: onConfirm,
+                    isPrimary: true,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                BookingActionButton(label: 'Cancel', onPressed: onCancel),
+                Flexible(
+                  child: BookingActionButton(
+                    label: 'Cancel',
+                    onPressed: onCancel,
+                  ),
+                ),
               ],
             ),
           ),

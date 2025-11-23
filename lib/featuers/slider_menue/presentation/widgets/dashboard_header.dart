@@ -1,5 +1,8 @@
+import 'package:bussines_booking/core/routers/router.dart';
+import 'package:bussines_booking/core/services/auth_storage_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({required this.title, super.key});
@@ -38,7 +41,10 @@ class DashboardHeader extends StatelessWidget {
           const SizedBox(width: 12),
           IconButton(
             icon: const Icon(Icons.logout, size: 20),
-            onPressed: () {},
+            onPressed: () async {
+              await AuthStorageService.clearToken();
+              context.go(AppRouters.loginRoute);
+            },
             color: const Color(0xFF6B7280),
           ),
         ],

@@ -63,9 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
+            _isLoading = false;
             context.go(AppRouters.sliderRoute);
           }
+          if (state is AuthLoading) {
+            _isLoading = true;
+          }
           if (state is AuthError) {
+            _isLoading = false;
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));

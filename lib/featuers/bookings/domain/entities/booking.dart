@@ -31,47 +31,81 @@ enum BookingStatus {
   }
 }
 
+/// User data in booking (nested from API)
+class BookingUser extends Equatable {
+  const BookingUser({
+    required this.id,
+    required this.name,
+    required this.email,
+    this.phone,
+  });
+  final String id;
+  final String name;
+  final String email;
+  final String? phone;
+
+  @override
+  List<Object?> get props => [id, name, email, phone];
+}
+
+/// Session data in booking (nested from API)
+class BookingSession extends Equatable {
+  const BookingSession({
+    required this.id,
+    required this.name,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+  });
+  final String id;
+  final String name;
+  final DateTime date;
+  final String startTime;
+  final String endTime;
+
+  @override
+  List<Object?> get props => [id, name, date, startTime, endTime];
+}
+
 /// Booking domain entity
 class BookingEntity extends Equatable {
   const BookingEntity({
     required this.id,
-    required this.userId,
-    required this.sessionId,
+    required this.user,
+    required this.businessId,
+    required this.session,
     required this.status,
-    required this.bookedAt,
+    required this.credits,
+    required this.bookingDate,
+    required this.createdAt,
+    required this.updatedAt,
     this.notes,
     this.confirmedAt,
-    this.sessionName,
-    this.sessionInstructor,
-    this.sessionDate,
-    this.sessionTime,
   });
   final String id;
-  final String userId;
-  final String sessionId;
+  final BookingUser user;
+  final String businessId;
+  final BookingSession session;
   final BookingStatus status;
+  final int credits;
+  final DateTime bookingDate;
   final String? notes;
-  final DateTime bookedAt;
   final DateTime? confirmedAt;
-
-  // Populated session details (from API)
-  final String? sessionName;
-  final String? sessionInstructor;
-  final DateTime? sessionDate;
-  final String? sessionTime;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   @override
   List<Object?> get props => [
     id,
-    userId,
-    sessionId,
+    user,
+    businessId,
+    session,
     status,
+    credits,
+    bookingDate,
     notes,
-    bookedAt,
     confirmedAt,
-    sessionName,
-    sessionInstructor,
-    sessionDate,
-    sessionTime,
+    createdAt,
+    updatedAt,
   ];
 }

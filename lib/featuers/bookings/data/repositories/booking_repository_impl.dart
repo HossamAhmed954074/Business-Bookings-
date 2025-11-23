@@ -3,6 +3,7 @@ import 'package:bussines_booking/core/error/failure.dart';
 import 'package:bussines_booking/core/models/paginated_result.dart';
 import 'package:bussines_booking/core/services/api/api_consumer.dart';
 import 'package:bussines_booking/core/services/api/end_points.dart';
+import 'package:bussines_booking/core/services/auth_storage_services.dart';
 import 'package:bussines_booking/featuers/bookings/data/models/booking_model.dart';
 import 'package:bussines_booking/featuers/bookings/domain/entities/booking.dart';
 import 'package:bussines_booking/featuers/bookings/domain/repositories/booking_repository.dart';
@@ -47,19 +48,21 @@ class BookingRepositoryImpl implements BookingRepository {
     BookingStatus? status,
   }) async {
     try {
-      final queryParams = {
-        'page': page.toString(),
-        'limit': limit.toString(),
-        if (status != null) 'status': status.value,
-      };
+      //// shoud add token to header
+      final token = await AuthStorageService.getToken();
+      if (token == null) {
+        return Left(DioAppException(message: 'No token found'));
+      }
+      final queryParams = {'page': page.toString(), 'limit': limit.toString()};
 
       final response = await apiConsumer.get(
-        EndPoints.bookings,
+        '/bookings',
         queryParameters: queryParams,
+        headers: {'x-auth-token': token},
       );
 
       final responseData = response.data as Map<String, dynamic>;
-
+      print(responseData);
       final items =
           (responseData['items'] as List<dynamic>?)
               ?.map(
@@ -72,7 +75,7 @@ class BookingRepositoryImpl implements BookingRepository {
         items: items,
         page: responseData['page'] as int? ?? page,
         limit: responseData['limit'] as int? ?? limit,
-        totalItems: responseData['totalItems'] as int? ?? items.length,
+        totalItems: responseData['total'] as int? ?? items.length,
         totalPages: responseData['totalPages'] as int? ?? 1,
       );
 
